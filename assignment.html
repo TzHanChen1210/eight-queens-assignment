@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>8-queens puzzle</h2>
+<p>Write a function that returns all distinct solutions to the 8-queens puzzle.
+
+Each solution contains a distinct board configuration of the 8-queens' placement, where 'Q' and '.' both indicate a queen and an empty space respectively.
+</p>
+
+<p id="answer"></p>
+
+<script>
+function queens(n) {
+  const result = [];
+  
+  function ifValid(row, col, board) {
+    for (let i = 0; i < row; i++) {
+      if (board[i][col] === 'Q') return false;
+    }
+    
+    for (let i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
+      if (board[i][j] === 'Q') return false;
+    }
+    
+    for (let i = row - 1, j = col + 1; i >= 0 && j < n; i--, j++) {
+      if (board[i][j] === 'Q') return false;
+    }
+    
+    return true;
+  }
+  
+  function recursive(row, board) {
+    if (row === n) {
+      result.push(board.map(row => row.join('')));
+      return;
+    }
+    
+    for (let col = 0; col < n; col++) {
+      if (ifValid(row, col, board)) {
+        board[row][col] = 'Q';
+        recursive(row + 1, board);
+        board[row][col] = '.';
+      }
+    }
+  }
+  
+  const chessboard = [...new Array(n)].map(()=> new Array(n).fill("."))
+  recursive(0, chessboard);
+  
+  return result;
+}
+
+const answers = queens(8);
+let counter = 1, text = ""
+for (const answer of answers) {
+ 	text += "Solution " + counter++ + "<br>" + answer.join("<br>") + "<br><br>"
+}
+
+document.getElementById("answer").innerHTML = text;
+</script>
+
+</body>
+</html> 
